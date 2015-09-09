@@ -1,0 +1,53 @@
+#!/bin/bash
+
+###############################################################################
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, 
+#  - write to the Free Software
+#       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#   - See http://www.gnu.org/licenses/gpl.html
+###############################################################################
+
+
+# Varibles
+SYSCONF_PATH='/pub/git/'               # Chemin vers la conf apache
+SITE_AVAILABLE='repo-available'        # Site en attente
+SITE_ENABLED='repo-enabled'            # Site activés
+
+
+# Quel site ?
+if [ -z ${1} ]; then
+    echo "Which repository do you want to disable?"
+    for site in ${SYSCONF_PATH}/${SITE_ENABLED}/*; do
+        echo -e "\t${site}" | sed -e "s,${SYSCONF_PATH}/${SITE_ENABLED}/,,g"
+    done;
+    echo -n "Name of the repository?"
+    read SITENAME
+else
+    SITENAME=${1}
+fi
+
+
+# Déjà désactivé ?
+#if ! [ -e ${SYSCONF_PATH}/${SITE_ENABLED}/${SITENAME}.git ]; then
+#    echo "This repository is already disactivated!"
+#    exit 1
+#fi
+
+# Traitement :
+if ! rm ${SYSCONF_PATH}/${SITE_ENABLED}/${SITENAME}.git 2>/dev/null; then
+    rm -f ${SYSCONF_PATH}/${SITE_ENABLED}/${SITENAME}.git
+fi
+
+echo "Repository ${SITENAME} uninstalled."
+
